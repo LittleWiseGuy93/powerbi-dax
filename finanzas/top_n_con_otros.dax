@@ -1,0 +1,25 @@
+VentasConTopN =
+VAR TopNClientes = 
+    TOPN(
+        5,
+        SUMMARIZE(DimCliente, DimCliente[Nombre], "Ventas", [Total Ventas]),
+        [Ventas], DESC
+    )
+
+VAR TodosClientes =
+    ADDCOLUMNS(
+        VALUES(DimCliente[Nombre]),
+        "Ventas", [Total Ventas]
+    )
+
+VAR Otros = 
+    SUMX(
+        EXCEPT(TodosClientes, TopNClientes),
+        [Ventas]
+    )
+
+RETURN
+UNION(
+    TopNClientes,
+    ROW("Nombre", "Otros", "Ventas", Otros)
+)

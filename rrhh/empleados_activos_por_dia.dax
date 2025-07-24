@@ -1,0 +1,9 @@
+EmpleadosActivos = 
+CALCULATE(
+    DISTINCTCOUNT(DimEmpleado[ID]),
+    FILTER(
+        EmpleadoContratos,
+        EmpleadoContratos[FechaInicio] <= MAX(DimTiempo[Fecha]) &&
+        (ISBLANK(EmpleadoContratos[FechaFin]) || EmpleadoContratos[FechaFin] >= MAX(DimTiempo[Fecha]))
+    )
+)

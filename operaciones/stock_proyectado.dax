@@ -1,0 +1,8 @@
+StockProyectado = 
+CALCULATE(
+    SUM(FactEntradas[Cantidad]) - SUM(FactSalidas[Cantidad]),
+    FILTER(
+        ALL(DimTiempo),
+        DimTiempo[Fecha] >= MAX(DimTiempo[Fecha])
+    )
+)

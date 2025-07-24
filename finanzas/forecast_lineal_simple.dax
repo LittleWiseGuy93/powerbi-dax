@@ -1,0 +1,11 @@
+ProyeccionVentas = 
+VAR NumPeriodos = COUNTROWS(DimTiempo)
+VAR VentasTotales = SUM(FactVentas[Importe])
+VAR VentasPromedio = DIVIDE(VentasTotales, NumPeriodos)
+
+RETURN
+IF(
+    MAX(DimTiempo[Fecha]) > MAX(FactVentas[Fecha]),
+    VentasPromedio,
+    BLANK()
+)

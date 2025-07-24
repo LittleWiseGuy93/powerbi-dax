@@ -1,0 +1,8 @@
+DuracionPromedioDias = 
+AVERAGEX(
+    FILTER(
+        FactProcesos,
+        NOT ISBLANK(FactProcesos[FechaFin])
+    ),
+    DATEDIFF(FactProcesos[FechaInicio], FactProcesos[FechaFin], DAY)
+)
