@@ -1,3 +1,9 @@
+-- ⏱️ DuracionPromedioDias — Promedio de duración entre dos fechas
+--
+-- Esta medida calcula el número promedio de días que duran los procesos
+-- registrados en la tabla de hechos, considerando solo aquellos que tienen
+-- una fecha de fin válida (no en blanco).
+
 DuracionPromedioDias = 
 AVERAGEX(
     FILTER(
@@ -6,3 +12,24 @@ AVERAGEX(
     ),
     DATEDIFF(FactProcesos[FechaInicio], FactProcesos[FechaFin], DAY)
 )
+
+-- 🧠 Explicación paso a paso:
+-- - FILTER(...): excluye los registros sin fecha de fin
+-- - DATEDIFF(..., DAY): calcula la duración en días entre el inicio y el fin
+-- - AVERAGEX(...): promedia esas duraciones para obtener un valor general
+
+-- 📊 Ejemplo de datos:
+-- FechaInicio     | FechaFin       | Días
+-- 2024-01-01      | 2024-01-10     | 9
+-- 2024-01-05      | 2024-01-08     | 3
+-- 2024-01-10      | (BLANK)        | (excluido)
+-- Promedio:                             6
+
+-- ✅ Cuándo usar esta medida:
+-- - Para calcular tiempos de entrega, resolución, producción o tramitación
+-- - Para analizar cuellos de botella o eficiencia operativa
+-- - Para establecer SLA (Service Level Agreement) en procesos
+
+-- 💡 Consejo:
+-- Si manejas procesos con pausas, podrías crear una versión que reste feriados
+-- o solo cuente días laborales usando una tabla de calendario con indicadores.
