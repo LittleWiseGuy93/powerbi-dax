@@ -1,3 +1,10 @@
+-- 🏆 VentasConTopN — Ranking dinámico con categoría "Otros"
+--
+-- Esta medida DAX permite mostrar los Top N elementos (ej. clientes, productos)
+-- y agrupar el resto bajo una fila "Otros", sumando sus valores.
+-- Muy útil en visuales tipo gráfico de barras o tablas donde el espacio es limitado
+-- pero no se quiere perder información.
+
 VentasConTopN =
 VAR TopNClientes = 
     TOPN(
@@ -5,21 +12,43 @@ VAR TopNClientes =
         SUMMARIZE(DimCliente, DimCliente[Nombre], "Ventas", [Total Ventas]),
         [Ventas], DESC
     )
+    -- 🟢 Obtiene los 5 clientes con mayor total de ventas
 
 VAR TodosClientes =
     ADDCOLUMNS(
         VALUES(DimCliente[Nombre]),
         "Ventas", [Total Ventas]
     )
+    -- 🟢 Lista todos los clientes con su total de ventas
 
 VAR Otros = 
     SUMX(
         EXCEPT(TodosClientes, TopNClientes),
         [Ventas]
     )
+    -- 🟢 Calcula la suma de ventas de todos los clientes que no están en el Top N
 
 RETURN
 UNION(
     TopNClientes,
     ROW("Nombre", "Otros", "Ventas", Otros)
 )
+-- 🟢 Une el Top N con una fila adicional llamada "Otros" que representa el resto
+
+-- 📊 Ejemplo de salida (gráfico de barras o tabla):
+-- Nombre        | Ventas
+-- ------------- | --------
+-- Cliente A     | 12000
+-- Cliente B     | 9800
+-- Cliente C     | 8700
+-- Cliente D     | 8600
+-- Cliente E     | 7900
+-- Otros         | 22000
+
+-- ✅ Cuándo usar esta medida:
+-- - Para evitar visuales saturadas con cientos de valores
+-- - Para priorizar análisis de los elementos más relevantes
+-- - Para resúmenes ejecutivos donde se desea foco en los principales y su impacto global
+
+-- 💡 Consejo:
+-- Puedes hacer que el "Top N" sea dinámico usando un parámetro o medida con SELECTEDVALUE().
