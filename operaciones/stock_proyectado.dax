@@ -1,3 +1,8 @@
+-- 📦 StockProyectado — Estimación de stock futuro
+--
+-- Esta medida calcula el stock proyectado a partir de una fecha específica,
+-- sumando todas las entradas y restando todas las salidas **desde esa fecha en adelante**.
+
 StockProyectado = 
 CALCULATE(
     SUM(FactEntradas[Cantidad]) - SUM(FactSalidas[Cantidad]),
@@ -6,3 +11,29 @@ CALCULATE(
         DimTiempo[Fecha] >= MAX(DimTiempo[Fecha])
     )
 )
+
+-- 🧠 Explicación paso a paso:
+-- - SUM(FactEntradas[Cantidad]): suma las unidades entrantes
+-- - SUM(FactSalidas[Cantidad]): suma las unidades salientes
+-- - La diferencia representa el saldo neto de stock
+
+-- - FILTER(ALL(DimTiempo), ...): ignora el contexto de fechas activo
+--   y recalcula desde la fecha máxima visible en el gráfico hacia el futuro
+
+-- - MAX(DimTiempo[Fecha]): representa la fecha actual del contexto visual
+--   (por ejemplo, cada barra de un gráfico por semana)
+
+-- ✅ Ejemplo:
+-- En un gráfico de líneas por fecha:
+-- - 2024-07-01 → Stock proyectado = 150
+-- - 2024-07-02 → Stock proyectado = 135
+-- - 2024-07-03 → Stock proyectado = 120
+
+-- ✅ Cuándo usar esta medida:
+-- - En gráficos de inventario acumulado o previsión de agotamiento
+-- - Para detectar en qué punto el stock podría llegar a cero
+-- - Como insumo para decisiones de reabastecimiento
+
+-- 💡 Consejo:
+-- Puedes combinar esta medida con `IF([StockProyectado] < 0, "Riesgo", "OK")`
+-- para crear alertas visuales o formatos condicionales en Power BI.
