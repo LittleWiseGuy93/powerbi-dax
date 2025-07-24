@@ -58,6 +58,18 @@ Desarrollado por **Juan Rodríguez** ([@LittleWiseGuy93](https://github.com/Litt
 
 ---
 
+---
+
+## Reursos
+
+  - https://learn.microsoft.com/es-es/dax/dax-function-reference
+  - https://learn.microsoft.com/es-es/power-bi/transform-model/desktop-quickstart-learn-dax-basics
+  - https://community.fabric.microsoft.com/t5/Power-BI-forums/ct-p/powerbi
+  - https://stackoverflow.com/questions/tagged/dax
+  - https://dax.guide/
+
+---
+
 ## 📄 Licencia
 
 MIT — libre de usar y adaptar en cualquier entorno profesional.
