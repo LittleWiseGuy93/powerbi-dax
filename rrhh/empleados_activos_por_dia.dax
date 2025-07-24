@@ -1,9 +1,42 @@
+-- 👥 EmpleadosActivos — Conteo de empleados vigentes en cada fecha
+--
+-- Esta medida calcula cuántos empleados están activos en un momento del tiempo.
+-- Se basa en las fechas de inicio y fin de contrato para determinar si un empleado
+-- estaba trabajando en esa fecha.
+
 EmpleadosActivos = 
 CALCULATE(
     DISTINCTCOUNT(DimEmpleado[ID]),
     FILTER(
         EmpleadoContratos,
         EmpleadoContratos[FechaInicio] <= MAX(DimTiempo[Fecha]) &&
-        (ISBLANK(EmpleadoContratos[FechaFin]) || EmpleadoContratos[FechaFin] >= MAX(DimTiempo[Fecha]))
+        (
+            ISBLANK(EmpleadoContratos[FechaFin]) || 
+            EmpleadoContratos[FechaFin] >= MAX(DimTiempo[Fecha])
+        )
     )
 )
+
+-- 🧠 Explicación paso a paso:
+-- - DISTINCTCOUNT(...): cuenta cada empleado solo una vez
+-- - FILTER(...): aplica condiciones de vigencia según fecha actual del contexto
+
+-- Condición lógica:
+-- - FechaInicio ≤ Fecha actual (empleado ya ha comenzado)
+-- - FechaFin ≥ Fecha actual O está en blanco (empleado sigue activo o no tiene fecha de fin)
+
+-- 📊 Ejemplo:
+-- Fecha               | Empleados Activos
+-- ------------------- | -----------------
+-- 2024-01-01          | 35
+-- 2024-03-15          | 42
+-- 2024-07-01          | 38
+
+-- ✅ Cuándo usar esta medida:
+-- - Para analizar plantilla laboral a lo largo del tiempo
+-- - Para evaluar periodos con alta rotación o crecimiento
+-- - Como base para calcular ratios como ventas por empleado
+
+-- 💡 Consejo:
+-- Asegúrate de que `EmpleadoContratos` tenga relación con `DimEmpleado`
+-- (aunque no necesariamente directa con DimTiempo) para que el modelo funcione bien.
