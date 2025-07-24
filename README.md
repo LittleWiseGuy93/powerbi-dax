@@ -60,7 +60,7 @@ Desarrollado por **Juan Rodríguez** ([@LittleWiseGuy93](https://github.com/Litt
 
 ---
 
-## Reursos
+## Recursos
 
   - https://learn.microsoft.com/es-es/dax/dax-function-reference
   - https://learn.microsoft.com/es-es/power-bi/transform-model/desktop-quickstart-learn-dax-basics
