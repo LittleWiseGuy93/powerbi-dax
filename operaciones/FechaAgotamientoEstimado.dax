@@ -1,0 +1,37 @@
+-- 🛑 FechaAgotamientoEstimado — Primera fecha en que el stock proyectado se agota
+--
+-- Esta medida busca la primera fecha futura donde el stock proyectado es cero o negativo.
+-- Es útil para anticipar roturas de stock en escenarios logísticos o de inventario.
+
+FechaAgotamientoEstimado =
+CALCULATE(
+    MIN(DimTiempo[Fecha]),
+    FILTER(
+        ALL(DimTiempo),
+        CALCULATE(
+            SUM(FactEntradas[Cantidad]) - SUM(FactSalidas[Cantidad])
+        ) <= 0
+        && DimTiempo[Fecha] >= TODAY()
+    )
+)
+
+-- 🧠 Explicación paso a paso:
+-- - ALL(DimTiempo): ignora cualquier filtro previo de fecha
+-- - CALCULATE(...): recalcula el stock neto (entradas - salidas)
+-- - Se filtran solo las fechas desde hoy en adelante
+-- - Se buscan aquellas donde el stock neto acumulado sea <= 0
+-- - MIN(...): devuelve la primera de esas fechas (agotamiento)
+
+-- 📊 Resultado:
+-- Si el stock actual se agota el 12 de agosto, la medida devuelve esa fecha.
+-- Si nunca se agota, devuelve BLANK().
+
+-- ✅ Cuándo usar esta medida:
+-- - Para alertas anticipadas en inventario o producción
+-- - Para dashboards de logística o gestión de suministros
+-- - Combinada con la fecha actual, permite calcular días restantes de stock
+
+-- 💡 Consejo:
+-- Puedes crear una medida complementaria: 
+--   DíasHastaAgotamiento = DATEDIFF(TODAY(), [FechaAgotamientoEstimado], DAY)
+-- Para mostrar cuántos días faltan para la ruptura de stock.
