@@ -1,3 +1,11 @@
+-- 📈 ProyeccionVentas — Estimación básica de ventas futuras
+-- 
+-- Esta medida DAX permite proyectar ventas futuras utilizando un promedio simple
+-- basado en el histórico. Es útil cuando no hay datos reales aún para ciertos
+-- períodos (por ejemplo, meses futuros).
+
+-- 🧠 Lógica paso a paso:
+
 ProyeccionVentas = 
 VAR NumPeriodos = COUNTROWS(DimTiempo)
 VAR VentasTotales = SUM(FactVentas[Importe])
@@ -9,3 +17,25 @@ IF(
     VentasPromedio,
     BLANK()
 )
+
+-- NumPeriodos: cuenta cuántas fechas hay en el modelo (día, mes, etc.)
+-- VentasTotales: suma de todas las ventas históricas
+-- VentasPromedio: promedio simple por período
+-- IF(...): muestra el promedio solo si la fecha del contexto visual es posterior
+-- a la última venta registrada
+
+-- 📊 Ejemplo de salida:
+-- Fecha        TotalVentas    ProyeccionVentas
+-- 2024-06-30   1200           
+-- 2024-07-01                1085 (promedio)
+-- 2024-07-02                1085
+-- 2024-07-03                1085
+
+-- ✅ Cuándo usar esta medida:
+-- - En gráficos de línea combinando ventas reales + proyectadas
+-- - En reportes ejecutivos donde se necesita mostrar proyección futura simple
+-- - Como referencia rápida antes de aplicar modelos más complejos
+
+-- 💡 Consejo:
+-- Puedes combinarla con TOTALYTD() o DATESYTD() para hacer un acumulado proyectado,
+-- y compararlo contra un objetivo anual.
